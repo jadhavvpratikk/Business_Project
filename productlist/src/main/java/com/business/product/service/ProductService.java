@@ -3,6 +3,7 @@ package com.business.product.service;
 import com.business.product.dto.ProductDTO;
 import com.business.product.entity.Category;
 import com.business.product.entity.Product;
+import com.business.product.exception.CategoryNotFoundException;
 import com.business.product.mapper.ProductMapper;
 import com.business.product.repository.CategoryRepository;
 import com.business.product.repository.ProductRepository;
@@ -28,7 +29,7 @@ public class ProductService {
          * id, name, description, price, categoryId
          * **/
         Category category = categoryRepository.findById(productDTO.getCategoryId())
-                .orElseThrow(()-> new RuntimeException("Category not found!"));
+                .orElseThrow(()-> new CategoryNotFoundException("Category id - "+ productDTO.getCategoryId() +" not found!"));
         //Dto -> entity
         Product product = ProductMapper.toProductEntity(productDTO, category);
         product = productRepository.save(product);
@@ -58,7 +59,7 @@ public class ProductService {
         //first we will check from product dto having same category id as present in category entity
         //second we will also check that category is same category name inside that database
         Category category = categoryRepository.findById(productDTO.getCategoryId())
-                .orElseThrow(()-> new RuntimeException("Category not found"));
+                .orElseThrow(()-> new CategoryNotFoundException("Category id - "+ productDTO.getCategoryId() +" not found!"));
 
         product.setName(productDTO.getName());
         product.setDescription(productDTO.getDescription());
